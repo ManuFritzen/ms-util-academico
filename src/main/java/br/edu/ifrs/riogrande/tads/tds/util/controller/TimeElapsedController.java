@@ -2,6 +2,7 @@ package br.edu.ifrs.riogrande.tads.tds.util.controller;
 
 import br.edu.ifrs.riogrande.tads.tds.util.controller.dto.ApiResponse;
 import br.edu.ifrs.riogrande.tads.tds.util.controller.dto.TimeElapsedResponseDTOV2;
+import br.edu.ifrs.riogrande.tads.tds.util.controller.dto.TimeElapsedResponseDTOV3;
 import br.edu.ifrs.riogrande.tads.tds.util.dto.TimeElapsedRequest;
 import br.edu.ifrs.riogrande.tads.tds.util.dto.TimeElapsedResponse;
 import br.edu.ifrs.riogrande.tads.tds.util.service.TimeElapsedCalculatorService;
@@ -41,5 +42,18 @@ public class TimeElapsedController {
                 request.getStartTime(), request.getEndTime());
         
         return ResponseEntity.ok(new ApiResponse<>(new TimeElapsedResponseDTOV2(elapsedTime)));
+    }
+    
+    @PostMapping(
+        value = "v3/elapsed",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ApiResponse<TimeElapsedResponseDTOV3>> calculateTimeElapsedV3(@RequestBody TimeElapsedRequest request) {
+        String elapsedTime = calculatorService.calculateTimeElapsed(
+                request.getStartTime(), request.getEndTime());
+        Long totalSeconds = calculatorService.calculateTotalSeconds(
+                request.getStartTime(), request.getEndTime());
+        
+        return ResponseEntity.ok(new ApiResponse<>(new TimeElapsedResponseDTOV3(elapsedTime, totalSeconds)));
     }
 }
